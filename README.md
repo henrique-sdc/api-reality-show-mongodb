@@ -14,18 +14,16 @@ A API fornece endpoints para consultas complexas utilizando o **Aggregation Fram
 -   **Banco de Dados:** MongoDB (com MongoDB Atlas)
 -   **Frontend (Demonstração):** HTML5, CSS3, JavaScript (Vanilla)
 -   **Testes:** Postman
--   **Plugins/Drivers:**
-    -   `mongodb`: Driver oficial do MongoDB para Node.js.
-    -   `express`: Framework para a construção da API.
+-   **Ferramentas:** Atlas CLI, Mongosh, Atlas Charts
+-   **Drivers:** `mongodb`, `express`
 
 ## 📋 Pré-requisitos
 
-Para executar este projeto, você precisará de:
-
 -   **[Node.js](https://nodejs.org/)** (versão 18 ou superior)
 -   **[Git](https://git-scm.com/downloads/)**
--   Uma conta no **[MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register)** para criar o cluster.
--   **[Postman](https://www.postman.com/downloads/)** (opcional, para testar os endpoints com a collection fornecida).
+-   Uma conta no **[MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register)**
+-   **[Atlas CLI](https://www.mongodb.com/try/download/atlascli)** instalado e configurado no PATH do sistema.
+-   **[Postman](https://www.postman.com/downloads/)** (opcional, para testes).
 
 ## 📂 Estrutura do Projeto
 
@@ -41,43 +39,6 @@ api-reality-show-mongodb/
 ├── package.json            # Dependências e metadados do projeto
 └── README.md                 # Este arquivo
 ```
-
-## ⚙️ Configuração e Execução
-
-1.  **Clone o repositório:**
-    ```bash
-    git clone https://github.com/henrique-sdc/api-reality-show-mongodb.git
-    ```
-
-2.  **Instale as dependências do Node.js:**
-    ```bash
-    npm install
-    ```
-
-3.  **Configure o Banco de Dados no MongoDB Atlas:**
-    -   Crie um cluster gratuito no Atlas.
-    -   Crie um usuário de banco de dados e libere o acesso para qualquer IP (0.0.0.0/0).
-    -   Obtenha sua **string de conexão**.
-
-4.  **Importe os dados iniciais:**
-    Use o comando `mongoimport` no seu terminal, substituindo com sua string de conexão, para popular as coleções.
-    ```bash
-    # Importar realities
-    mongoimport --uri "SUA_STRING_DE_CONEXAO" --collection realities --file realities.json --jsonArray
-
-    # Importar prêmios
-    mongoimport --uri "SUA_STRING_DE_CONEXAO" --collection premios_potenciais --file premios_potenciais.json --jsonArray
-    ```
-
-5.  **Configure a Conexão no Código:**
-    -   Abra o arquivo `server.js`.
-    -   Localize a variável `url` e substitua o placeholder pela **sua string de conexão completa**.
-
-6.  **Execute a aplicação:**
-    ```bash
-    node server.js
-    ```
-    O servidor estará rodando em `http://localhost:3000`.
 
 ## 🔑 JSON Schema Validator
 
@@ -129,11 +90,151 @@ db.createCollection("realities", {
 });
 ```
 
+## ⚙️ Configuração e Execução Completa
+
+Este guia detalha todos os passos, desde a criação da infraestrutura na nuvem até a execução da API local.
+
+### Parte A: Ambiente Local
+
+1.  **Clone o repositório:**
+    ```bash
+    git clone https://github.com/henrique-sdc/api-reality-show-mongodb.git
+    cd api-reality-show-mongodb
+    ```
+
+2.  **Instale as dependências do Node.js:**
+    ```bash
+    npm install
+    ```
+
+### Parte B: Ambiente MongoDB Atlas (Via Atlas CLI)
+
+Execute os comandos abaixo em seu terminal para configurar o projeto no MongoDB Atlas.
+
+1.  **Login no Atlas:**
+    ```bash
+    # Este comando abrirá uma aba no navegador para você autenticar.
+    atlas login
+    ```
+
+2.  **Criação do Projeto e Cluster:**
+    ```bash
+    # Cria o projeto
+    atlas projects create reality-show
+    ```
+    **Atenção:** Anote o **ID do projeto** retornado (ex: `Project '68d...7405' created.`).
+    ```bash
+    # Define o projeto recém-criado como padrão
+    atlas config set project_id <SEU_PROJECT_ID>
+
+    # Cria o cluster gratuito M0 (pode levar alguns minutos)
+    atlas clusters create cluster01 --provider AWS --region US_EAST_1 --tier M0
+    ```
+
+3.  **Configuração de Acesso e Usuário:**
+    ```bash
+    # Libera o acesso de qualquer IP para facilitar o desenvolvimento
+    atlas accessLists create 0.0.0.0/0 --comment "Acesso geral"
+
+    # Cria um usuário e senha para o banco de dados (guarde essas credenciais!)
+    atlas dbusers create readWriteAnyDatabase --username <SEU_USUARIO> --password <SUA_SENHA>
+    ```
+
+4.  **Obter a String de Conexão:**
+    ```bash
+    atlas clusters connectionStrings describe cluster01
+    ```
+    Copie a string de conexão do tipo `standard`. Ela será a chave para conectar sua API ao banco.
+
+### Parte C: Preparando o Banco de Dados
+
+1.  **Conecte-se ao Cluster via Mongosh:**
+    Use a string de conexão obtida no passo anterior.
+    ```bash
+    mongosh "SUA_STRING_DE_CONEXAO_STANDARD" --username <SEU_USUARIO>
+    ```
+
+2.  **Crie a Coleção com Validação (JSON Schema):**
+    Dentro do `mongosh`, execute o comando abaixo para criar a coleção `realities` com as regras de integridade.
+    ```javascript
+    use reality_show_db;
+
+    db.createCollection("realities", {
+      validator: {
+        $jsonSchema: {
+          bsonType: "object",
+          title: "Validação de Reality Show",
+          required: ["nome_reality", "ano", "emissora", "participantes"],
+          properties: {
+            nome_reality: { bsonType: "string" },
+            ano: { bsonType: "int", minimum: 2000 },
+            emissora: {
+              bsonType: "object",
+              required: ["nome_emissora", "audiencia_pontos"],
+              properties: {
+                nome_emissora: { bsonType: "string" },
+                audiencia_pontos: { bsonType: "int" }
+              }
+            },
+            participantes: {
+              bsonType: "array",
+              items: {
+                bsonType: "object",
+                required: ["nome_participante", "idade", "cidade"],
+                properties: {
+                  nome_participante: { bsonType: "string" },
+                  idade: { bsonType: "int" },
+                  cidade: { bsonType: "string" },
+                  votos: { bsonType: "int" },
+                  premios_ganhos: { bsonType: "array" }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+    ```
+
+3.  **Importe os Dados Iniciais:**
+    Em um **novo terminal**, na pasta do projeto, execute os comandos `mongoimport` com sua string de conexão.
+    ```bash
+    # Importar realities
+    mongoimport --uri "SUA_STRING_DE_CONEXAO_COMPLETA/reality_show_db" --collection realities --file realities.json --jsonArray
+
+    # Importar prêmios
+    mongoimport --uri "SUA_STRING_DE_CONEXAO_COMPLETA/reality_show_db" --collection premios_potenciais --file premios_potenciais.json --jsonArray
+    ```
+
+### Parte D: Configurando o Gráfico de Votação (Atlas Charts)
+
+1.  No site do MongoDB Atlas, navegue até a aba **Charts**.
+2.  Crie um novo **Dashboard** (ex: "Votação Dashboard").
+3.  Clique em **Add Chart** e selecione a Data Source: `reality_show_db` -> `realities`.
+4.  **Configure o gráfico da seguinte forma:**
+    -   **Chart Type:** `Grouped Bar`
+    -   ⚠️ **Unwind Array:** Na lista de campos à esquerda, encontre o array `participantes` e **ative a opção "Unwind array"**. Este passo é crucial.
+    -   **Y Axis (Eixo das Categorias):** Arraste o campo `participantes.nome_participante`.
+    -   **X Axis (Eixo dos Valores):** Arraste o campo `participantes.votos`.
+        -   **Aggregate:** Selecione `sum`.
+    -   **Filter:** Adicione um filtro onde o campo `nome_reality` seja igual a `A Ilha dos Desafios`.
+5.  **Salve o gráfico**. No dashboard, clique nos três pontos (...) do gráfico > **Embed Chart**. Ative o embedding, vá para a aba **IFrame** e copie o código.
+6.  **Cole o código do `<iframe>`** dentro do arquivo `public/dashboard.html`.
+
+### Parte E: Execução Final da API
+
+1.  **Configure a Conexão no Código:**
+    -   Abra o arquivo `server.js`.
+    -   Localize a variável `url` e substitua o placeholder pela **sua string de conexão completa**.
+2.  **Inicie o servidor:**
+    ```bash
+    node server.js
+    ```
+
 ## 🚀 Testando a API
 
 -   **Páginas Web:**
     -   Acesse `http://localhost:3000` para a página de votação.
-    -   Acesse `http://localhost:3000/dashboard` para visualizar o gráfico de votos (requer configuração no Atlas Charts).
+    -   Acesse `http://localhost:3000/dashboard` para visualizar o gráfico. Lembre-se que no plano gratuito do Atlas, a atualização pode não ser em tempo real. Use o botão de refresh no dashboard para forçar a atualização.
 -   **Postman:**
-    -   Importe o arquivo `RealityShow.postman_collection.json` no Postman.
-    -   A coleção contém requisições prontas para todos os endpoints da API, com descrições detalhadas do que cada um faz.
+    -   Importe o arquivo `RealityShow.postman_collection.json` no Postman para ter acesso a requisições prontas para todos os endpoints.
