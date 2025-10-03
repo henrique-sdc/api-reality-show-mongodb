@@ -1,0 +1,7 @@
+[
+  { "nome_premio": "Carro 0km", "valor": 70000 },
+  { "nome_premio": "Casa Própria", "valor": 250000 },
+  { "nome_premio": "Viagem Internacional", "valor": 15000 },
+  { "nome_premio": "Bolsa de Estudos", "valor": 50000 },
+  { "nome_premio": "Um Milhão de Reais", "valor": 1000000 }
+]

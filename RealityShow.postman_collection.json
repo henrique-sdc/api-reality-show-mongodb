@@ -1,0 +1,165 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-4a7b-8c9d-0123456789ab",
+    "name": "[NoSQL] Reality Show API",
+    "description": "Coleção para testar todos os endpoints da API do projeto Reality Show, desenvolvida com Node.js e MongoDB.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Consultas Gerais",
+      "description": "Endpoints que retornam dados agregados de toda a base.",
+      "item": [
+        {
+          "name": "GET Prêmios por Participante",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/premios",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["premios"]
+            },
+            "description": "Exibe o nome de todos os reality shows, seus participantes e a lista de prêmios que cada um já recebeu. Ótimo para ter uma visão geral."
+          },
+          "response": []
+        },
+        {
+          "name": "GET Total de Prêmios por Reality",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/total",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["total"]
+            },
+            "description": "Exibe o total de prêmios já distribuídos, agrupados por cada reality show."
+          },
+          "response": []
+        },
+        {
+          "name": "GET Audiência por Emissora",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/audiencia",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["audiencia"]
+            },
+            "description": "Exibe o nome de cada emissora e o total de pontos de audiência somando todos os seus realities."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Consultas por Parâmetro",
+      "description": "Endpoints que requerem um parâmetro na URL para filtrar os resultados.",
+      "item": [
+        {
+          "name": "GET Idade em 'A Ilha dos Desafios'",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/idade/A Ilha dos Desafios",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["idade", "A Ilha dos Desafios"]
+            },
+            "description": "Exibe qual é o participante mais novo e o mais velho do reality 'A Ilha dos Desafios'."
+          },
+          "response": []
+        },
+        {
+          "name": "GET Idade em 'Cozinha em Chamas'",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/idade/Cozinha em Chamas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["idade", "Cozinha em Chamas"]
+            },
+            "description": "Exibe qual é o participante mais novo e o mais velho do reality 'Cozinha em Chamas'."
+          },
+          "response": []
+        },
+        {
+          "name": "GET Prêmio Maior ou Igual a R$ 50.000",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/maior/50000",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["maior", "50000"]
+            },
+            "description": "Exibe o nome da emissora e do reality onde algum participante tenha ganho um prêmio com valor maior ou igual a 50.000."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Funcionalidade de Votação",
+      "description": "Endpoints relacionados à página de votação.",
+      "item": [
+        {
+          "name": "GET Participantes para Votação",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/reality/A Ilha dos Desafios/participantes",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["reality", "A Ilha dos Desafios", "participantes"]
+            },
+            "description": "Endpoint auxiliar usado pela página de votação para buscar os participantes e seus IDs. Útil para pegar os IDs para o teste de votação."
+          },
+          "response": []
+        },
+        {
+          "name": "POST Votar em um Participante",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"realityId\": \"COLOQUE_O_ID_DO_REALITY_AQUI\",\n    \"participanteId\": \"651f0c4e7e1282a0e1c12346\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/votar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["votar"]
+            },
+            "description": "Registra um voto para um participante.\n\n**IMPORTANTE:**\n1. O `participanteId` no corpo já é o de 'Beatriz Lima'.\n2. Você precisa encontrar o `realityId` correto. Para isso, execute a requisição 'GET Participantes para Votação' e copie o `_id` principal que aparecer no resultado.\n3. Cole esse `_id` no campo `realityId` no corpo (body) desta requisição."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

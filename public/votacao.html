@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Votação Reality Show</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,
+        h2 {
+            color: #333;
+        }
+
+        #participantes-lista {
+            list-style: none;
+            padding: 0;
+        }
+
+        .participante-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .participante-item:last-child {
+            border-bottom: none;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Votação - A Ilha dos Desafios</h1>
+        <h2>Escolha seu participante favorito para continuar!</h2>
+        <ul id="participantes-lista"></ul>
+        <a href="/dashboard">Ver Gráfico de Votos (Atualização de 4 em 4 horas)</a>
+    </div>
+
+    <script>
+        const realityNome = "A Ilha dos Desafios";
+        const lista = document.getElementById('participantes-lista');
+        let realityId = null;
+
+        async function carregarParticipantes() {
+            const response = await fetch(`/reality/${realityNome}/participantes`);
+            const data = await response.json();
+            realityId = data._id;
+
+            data.participantes.forEach(p => {
+                const item = document.createElement('li');
+                item.className = 'participante-item';
+                item.innerHTML = `<span>${p.nome_participante}</span> <button data-id="${p._id}">Votar</button>`;
+                lista.appendChild(item);
+            });
+        }
+
+        lista.addEventListener('click', async (event) => {
+            if (event.target.tagName === 'BUTTON') {
+                const participanteId = event.target.dataset.id;
+                const res = await fetch('/votar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ realityId, participanteId })
+                });
+                const data = await res.json();
+                alert(data.status || data.error);
+            }
+        });
+
+        carregarParticipantes();
+    </script>
+</body>
+
+</html>

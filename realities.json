@@ -1,0 +1,91 @@
+[
+  {
+    "nome_reality": "A Ilha dos Desafios",
+    "ano": 2023,
+    "emissora": { "nome_emissora": "Rede Tropical", "audiencia_pontos": 15 },
+    "participantes": [
+      {
+        "_id": { "$oid": "651f0c4e7e1282a0e1c12345" },
+        "nome_participante": "Carlos Andrade",
+        "idade": 28,
+        "cidade": "Rio de Janeiro",
+        "votos": 120,
+        "premios_ganhos": [{ "nome_premio": "Imunidade da Semana", "valor": 0 }]
+      },
+      {
+        "_id": { "$oid": "651f0c4e7e1282a0e1c12346" },
+        "nome_participante": "Beatriz Lima",
+        "idade": 22,
+        "cidade": "São Paulo",
+        "votos": 250,
+        "premios_ganhos": [
+          { "nome_premio": "Viagem para a Chapada Diamantina", "valor": 8000 }
+        ]
+      },
+      {
+        "_id": { "$oid": "651f0c4e7e1282a0e1c12347" },
+        "nome_participante": "Diego Fernandes",
+        "idade": 35,
+        "cidade": "Belo Horizonte",
+        "votos": 80,
+        "premios_ganhos": []
+      }
+    ]
+  },
+  {
+    "nome_reality": "Cozinha em Chamas",
+    "ano": 2024,
+    "emissora": { "nome_emissora": "Canal Sabor", "audiencia_pontos": 12 },
+    "participantes": [
+      {
+        "_id": { "$oid": "651f0c4e7e1282a0e1c12348" },
+        "nome_participante": "Juliana Moreira",
+        "idade": 41,
+        "cidade": "Curitiba",
+        "votos": 310,
+        "premios_ganhos": [
+          { "nome_premio": "Kit de Facas Profissionais", "valor": 2500 }
+        ]
+      },
+      {
+        "_id": { "$oid": "651f0c4e7e1282a0e1c12349" },
+        "nome_participante": "Ricardo Alves",
+        "idade": 25,
+        "cidade": "Porto Alegre",
+        "votos": 150,
+        "premios_ganhos": []
+      },
+      {
+        "_id": { "$oid": "651f0c4e7e1282a0e1c1234a" },
+        "nome_participante": "Fernanda Costa",
+        "idade": 33,
+        "cidade": "Salvador",
+        "votos": 190,
+        "premios_ganhos": [{ "nome_premio": "Carro 0km", "valor": 70000 }]
+      }
+    ]
+  },
+  {
+    "nome_reality": "A Grande Conquista",
+    "ano": 2024,
+    "emissora": { "nome_emissora": "Rede Tropical", "audiencia_pontos": 18 },
+    "participantes": [
+      {
+        "_id": { "$oid": "651f0c4e7e1282a0e1c1234b" },
+        "nome_participante": "Lucas Mendes",
+        "idade": 19,
+        "cidade": "Fortaleza",
+        "votos": 500,
+        "premios_ganhos": []
+      },
+      {
+        "_id": { "$oid": "651f0c4e7e1282a0e1c1234c" },
+        "nome_participante": "Mariana Souza",
+        "idade": 29,
+        "cidade": "Brasília",
+        "votos": 210,
+        "premios_ganhos": [{ "nome_premio": "Casa Própria", "valor": 250000 }]
+      }
+    ]
+  }
+]
