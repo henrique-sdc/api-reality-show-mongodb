@@ -35,6 +35,7 @@ api-reality-show-mongodb/
 ├── realities.json          # Dados iniciais para importação
 ├── premios_potenciais.json  # Dados iniciais para importação
 ├── RealityShow.postman_collection.json # Coleção para testes no Postman
+├── schema_validator.js # Script com o JSON Schema para criação da coleção
 ├── server.js               # Código principal da API
 ├── package.json            # Dependências e metadados do projeto
 └── README.md                 # Este arquivo
