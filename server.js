@@ -4,7 +4,7 @@ const { MongoClient, ObjectId } = require('mongodb');
 const app = express();
 app.use(express.json());
 
-const url = 'mongodb+srv://henrique_sdc:v2y4wv!te68bKS$M@cluster01.nqnsgsl.mongodb.net/?retryWrites=true&w=majority';
+const url = 'mongodb+srv://henrique_sdc:<SUA_SENHA>@cluster01.nqnsgsl.mongodb.net/?retryWrites=true&w=majority';
 const dbName = 'reality_show_db';
 let client;
 let db;
